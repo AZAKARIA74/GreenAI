@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GreenAI</string>
+    <string name="suggest_screen">"Suggest Screen "</string>
+</resources>
