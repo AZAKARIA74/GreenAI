@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.greenai.data.remote.RetrofitInstance
 import com.example.greenai.data.repositories.RepositoryImpl
+import com.example.greenai.navigation.GreenAIApp
 import com.example.greenai.presentation.viewmodel.DiseaseViewModel
 import com.example.greenai.presentation.viewmodel.SuggestionViewModel
 import com.example.greenai.ui.screen.DiseaseScanScreen
@@ -32,13 +33,9 @@ class MainActivity : ComponentActivity() {
                          SuggestionViewModel(repo = repository)
                     }
 
-
-
-                DiseaseScanScreen(
-                        viewModel = diseaseViewModel
-                    )
-                SuggestionScreen(
-                    viewModel = suggestionViewModel
+                GreenAIApp(
+                    diseaseViewModel = diseaseViewModel,
+                    suggestionViewModel = suggestionViewModel
                 )
             }
         }

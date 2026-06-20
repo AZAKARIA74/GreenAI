@@ -46,7 +46,8 @@ import com.greenai.ui.theme.GreenAITheme
 
 @Composable
 fun DiseaseScanScreen(
-    viewModel: DiseaseViewModel = viewModel()
+    viewModel: DiseaseViewModel = viewModel() ,
+    onBackClick: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     val img = viewModel.imageUri
@@ -61,7 +62,8 @@ fun DiseaseScanScreen(
             }
         },
         imageUri = img,
-        onImageSelected = viewModel::updateImageUri
+        onImageSelected = viewModel::updateImageUri,
+        onBackClick = onBackClick
     )
 }
 
@@ -72,13 +74,15 @@ fun DiseaseScanContent(
     onPredictClick: (uri: Uri?) -> Unit,
     imageUri: Uri? = null,
     onImageSelected: (Uri?) -> Unit,
+    onBackClick: () -> Unit = {},
+
 ) {
 
     var isLoading by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
-        topBar = { MyTopAppBar("Disease Scan", painterResource(R.drawable.outline_arrow_back_24)) }
+        topBar = { MyTopAppBar("Disease Scan", painterResource(R.drawable.outline_arrow_back_24), onBackClick = onBackClick)}
     ) { innerPadding ->
 
         Column(

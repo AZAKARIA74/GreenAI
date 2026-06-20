@@ -46,14 +46,16 @@ import kotlin.collections.lastIndex
 
 @Composable
 fun SuggestionScreen(
-    viewModel: SuggestionViewModel = viewModel()
+    viewModel: SuggestionViewModel = viewModel(),
+    onBackClick: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsState()
     SuggestionScreenContent(
         state = state,
         selectedMode = viewModel.selectedMode,
         setMode = viewModel::setMode,
-        onRecommend = viewModel::recommend
+        onRecommend = viewModel::recommend,
+        onBackClick = onBackClick
     )
 }
 
@@ -63,6 +65,7 @@ fun SuggestionScreenContent(
     selectedMode: SuggestionMode = SuggestionMode.FERTILIZER,
     setMode:  (SuggestionMode) -> Unit,
     onRecommend: (List<String>,List<FieldData>) -> Unit = {_,_->},
+    onBackClick: () -> Unit = {},
 ) {
     var isLoading by remember { mutableStateOf(false) }
 
@@ -107,7 +110,8 @@ fun SuggestionScreenContent(
         topBar = {
             MyTopAppBar(
                 stringResource(R.string.suggest_screen),
-                painterResource(R.drawable.outline_arrow_back_24)
+                painterResource(R.drawable.outline_arrow_back_24),
+                onBackClick = onBackClick
             )
         }
     ) { innerPadding ->

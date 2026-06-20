@@ -64,5 +64,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
 
+    implementation(libs.androidx.navigation.compose)
+
 
 }

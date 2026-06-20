@@ -2,6 +2,7 @@ package com.example.greenai.ui.component
 
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -25,6 +26,7 @@ import com.greenai.ui.theme.GreenAITheme
 fun MyTopAppBar(
     title: String,
     icon: Painter? =null,
+    onBackClick: () -> Unit = {}
 ) {
     Column {
 
@@ -33,7 +35,6 @@ fun MyTopAppBar(
             title = {
                 Text(
                     text = title,
-
                     color = MaterialTheme.colorScheme.onBackground,
                     style = MaterialTheme.typography.headlineMedium
                 )
@@ -44,7 +45,7 @@ fun MyTopAppBar(
                 icon?.let {
                     IconButton(
                         modifier = Modifier.padding(8.dp),
-                        onClick = { }
+                        onClick = onBackClick
                     ) {
 
                         Icon(
@@ -59,10 +60,10 @@ fun MyTopAppBar(
 
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = MaterialTheme.colorScheme.background
-            )
+            ),
 
+            windowInsets = WindowInsets(0, 0, 0, 0)
         )
-
         HorizontalDivider(
             thickness = 1.dp,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
