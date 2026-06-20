@@ -1,12 +1,12 @@
 package com.example.greenai.domain.model
 
 data class FertilizerRequest(
-    val nitrogen: Int,
-    val phosphorus: Int,
-    val potassium: Int,
+    val cropType: String,
+    val nitrogen: Float,
+    val phosphorus: Float,
+    val potassium: Float,
     val temperature: Float,
     val humidity: Float,
-    val moisture: Float,
+    val pH: Float,
     val soilType: String,
-    val cropType: String
 )

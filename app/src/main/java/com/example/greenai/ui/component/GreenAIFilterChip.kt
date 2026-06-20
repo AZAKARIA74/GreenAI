@@ -1,7 +1,5 @@
 package com.example.greenai.ui.component
 
-import android.R.attr.label
-import android.R.attr.onClick
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.height

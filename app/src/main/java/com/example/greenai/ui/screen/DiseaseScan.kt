@@ -38,7 +38,7 @@ import com.example.greenai.ui.component.MyTopAppBar
 import com.example.greenai.ui.component.ResultSection
 import com.example.greenai.ui.component.UploadImageBox
 import com.example.greenai.ui.state.Resource
-import com.example.greenai.ui.state.ResultState
+import com.example.greenai.ui.state.DiseaseResultState
 import com.example.greenai.ui.theme.GreenAIShape
 import com.example.greenai.ui.theme.GreenAISpacing
 import com.example.greenai.utils.uriToMultipart
@@ -105,7 +105,7 @@ fun DiseaseScanContent(
                 is Resource.Success -> {
                     isLoading = false
                     ResultSection(
-                        result = ResultState(
+                        result = DiseaseResultState(
                             state.data?.prediction ?:"" ,
                             state.data?.confidence ?: 0f
                         )

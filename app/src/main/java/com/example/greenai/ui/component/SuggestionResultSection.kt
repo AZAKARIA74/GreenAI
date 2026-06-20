@@ -14,10 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.example.greenai.domain.model.RecommendResponse
+import com.example.greenai.ui.state.SuggestionResult
 
 @Composable
-fun SuggestionResultsSection(result: RecommendResponse) {
+fun SuggestionResultsSection(result: SuggestionResult) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -32,8 +32,16 @@ fun SuggestionResultsSection(result: RecommendResponse) {
             color = MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.height(12.dp))
-        ResultItem(label = "Suggested Crop", value = result.crop)
-        Spacer(modifier = Modifier.height(8.dp))
-        ResultItem(label = "Recommended Fertilizer", value = result.fertilizer)
+
+        when (result) {
+            is SuggestionResult.Fertilizer -> {
+                ResultItem(label = "Recommended Fertilizer", value = result.fertilizer)
+            }
+            is SuggestionResult.Crop -> {
+                ResultItem(label = "Suggested Crop", value = result.crop)
+                Spacer(modifier = Modifier.height(8.dp))
+                ResultItem(label = "Recommended Fertilizer", value = result.fertilizer)
+            }
+        }
     }
 }

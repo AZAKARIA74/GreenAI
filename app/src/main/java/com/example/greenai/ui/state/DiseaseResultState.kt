@@ -1,6 +1,6 @@
 package com.example.greenai.ui.state
 
-data class ResultState(
+data class DiseaseResultState(
     val disease: String = "",
     val confidence: Float = 0f
 )

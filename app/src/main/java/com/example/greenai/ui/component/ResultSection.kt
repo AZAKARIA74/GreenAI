@@ -25,17 +25,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.greenai.R
-import com.example.greenai.domain.model.DiseaseResponse
-import com.example.greenai.ui.screen.DiseaseScanContent
-import com.example.greenai.ui.state.Resource
-import com.example.greenai.ui.state.ResultState
+import com.example.greenai.ui.state.DiseaseResultState
 import com.greenai.ui.theme.GreenAITheme
 import kotlin.text.ifEmpty
 
 
 @Composable
 fun ResultSection(
-    result: ResultState
+    result: DiseaseResultState
 ) {
     Column(
         modifier = Modifier
@@ -157,7 +154,7 @@ fun confidenceColor(confidence: Float) : Color {
 @Composable
 fun DiseaseScanScreenPreview() {
     GreenAITheme {
-        Column { ResultSection(ResultState("",0.8f))
+        Column { ResultSection(DiseaseResultState("",0.8f))
             ErrorSection("Something Went Wrong!") }
 
     }

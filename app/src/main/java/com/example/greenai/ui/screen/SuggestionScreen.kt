@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,31 +27,47 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.greenai.R
-import com.example.greenai.domain.model.RecommendResponse
+import com.example.greenai.presentation.viewmodel.SuggestionViewModel
 import com.example.greenai.ui.component.Button
+import com.example.greenai.ui.component.ErrorSection
 import com.example.greenai.ui.component.GreenAIFilterChip
 import com.example.greenai.ui.component.MyTopAppBar
 import com.example.greenai.ui.component.SuggestionResultsSection
 import com.example.greenai.ui.component.TextFiled
+import com.example.greenai.ui.state.Resource
+import com.example.greenai.ui.state.SuggestionResult
+import com.example.greenai.utils.SuggestionMode
 import com.example.greenai.utils.validateField
 import com.greenai.ui.theme.GreenAITheme
 import kotlin.collections.lastIndex
 
 
-enum class SuggestionMode {
-    FERTILIZER,
-    CROP
+@Composable
+fun SuggestionScreen(
+    viewModel: SuggestionViewModel = viewModel()
+) {
+    val state by viewModel.uiState.collectAsState()
+    SuggestionScreenContent(
+        state = state,
+        selectedMode = viewModel.selectedMode,
+        setMode = viewModel::setMode,
+        onRecommend = viewModel::recommend
+    )
 }
 
 @Composable
-fun SuggestionScreen() {
+fun SuggestionScreenContent(
+    state: Resource<SuggestionResult>,
+    selectedMode: SuggestionMode = SuggestionMode.FERTILIZER,
+    setMode:  (SuggestionMode) -> Unit,
+    onRecommend: (List<String>,List<FieldData>) -> Unit = {_,_->},
+) {
+    var isLoading by remember { mutableStateOf(false) }
 
-    var selectedMode by remember {
-        mutableStateOf(SuggestionMode.FERTILIZER)
-    }
 
-    val suggestionFields = listOf(
+    val cropRecommendFields = listOf(
         FieldData("Nitrogen", "0 - 200", FieldRule.Numeric(0f, 200f)),
         FieldData("Phosphorus", "0 - 150", FieldRule.Numeric(0f, 150f)),
         FieldData("Potassium", "0 - 300", FieldRule.Numeric(0f, 300f)),
@@ -60,7 +77,7 @@ fun SuggestionScreen() {
         FieldData("Soil Color", "e.g. Red", FieldRule.TextOnly)
     )
 
-    val compatibilityFields = listOf(
+    val fertilizerRecommendFields = listOf(
         FieldData("Crop", "e.g. Wheat", FieldRule.TextOnly),
         FieldData("Nitrogen", "0 - 200", FieldRule.Numeric(0f, 200f)),
         FieldData("Phosphorus", "0 - 150", FieldRule.Numeric(0f, 150f)),
@@ -73,9 +90,9 @@ fun SuggestionScreen() {
 
     val currentFields =
         if (selectedMode == SuggestionMode.CROP)
-            suggestionFields
+            cropRecommendFields
         else
-            compatibilityFields
+            fertilizerRecommendFields
 
     val values = remember(selectedMode) {
         List(currentFields.size) { "" }.toMutableStateList()
@@ -115,7 +132,8 @@ fun SuggestionScreen() {
                         GreenAIFilterChip(
                             selected = selectedMode == SuggestionMode.FERTILIZER,
                             onClick = {
-                                selectedMode = SuggestionMode.FERTILIZER
+                                setMode(SuggestionMode.FERTILIZER)
+
                             },
                             label = {
                                 Text("Recommend Fertilizer")
@@ -125,7 +143,7 @@ fun SuggestionScreen() {
                         GreenAIFilterChip(
                             selected = selectedMode == SuggestionMode.CROP,
                             onClick = {
-                                selectedMode = SuggestionMode.CROP
+                                setMode(SuggestionMode.CROP)
                             },
                             label = {
                                 Text("Recommend Crop")
@@ -193,26 +211,34 @@ fun SuggestionScreen() {
                     modifier = Modifier
                         .padding(vertical = 16.dp)
                         .fillMaxWidth(),
-                    onClick = {},
+                    onClick = {onRecommend(values,currentFields)},
                     enabled = !hasErrors && !hasEmptyValues,
-                    caption = "Recommend"
+                    caption = "Recommend",
+                    isLoading = isLoading
                 )
             }
 
             item(span = { GridItemSpan(2) }) {
 
-                SuggestionResultsSection(
-                    if (selectedMode == SuggestionMode.CROP)
-                        RecommendResponse(
-                            crop = "Wheat",
-                            fertilizer = "Urea"
-                        )
-                    else
-                        RecommendResponse(
-                            crop = "",
-                            fertilizer = "Urea"
-                        )
-                )
+
+                when(state){
+                    is Resource.Error-> {
+                        isLoading = false
+                        ErrorSection(state.message.toString())
+                    }
+                    is Resource.Idle -> {
+                        isLoading = false
+                    }
+                    is Resource.Loading -> {
+                        isLoading = true
+                    }
+                    is Resource.Success -> {
+                        state.data?.let {result ->
+                            SuggestionResultsSection(result)
+                        }
+                    }
+                }
+
             }
         }
     }
@@ -224,7 +250,11 @@ fun SuggestionScreen() {
 @Composable
 fun SuggestionScreenPreview() {
     GreenAITheme {
-        SuggestionScreen()
+        SuggestionScreenContent(
+            selectedMode = SuggestionMode.FERTILIZER,
+            setMode = {},
+            state = Resource.Success(SuggestionResult.Fertilizer("Urea"))
+        )
     }
 }
 
