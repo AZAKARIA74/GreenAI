@@ -109,6 +109,7 @@ fun TextFiled(
 
                 BasicTextField(
                     value = text,
+                    modifier = modifier.fillMaxWidth(),
                     onValueChange = onTextChange,
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     textStyle = titleStyle.copy(

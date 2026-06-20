@@ -56,7 +56,7 @@ fun Button(
                     Modifier.border(borderSize.dp, borderColor, GreenAIShape.circle)
                 else Modifier
             )
-            .clickable(enabled = !isLoading) { onClick() }
+            .clickable(enabled = enabled && !isLoading) { onClick() }
             .padding(
                 vertical = GreenAISpacing.sm,
                 horizontal = GreenAISpacing.lg
