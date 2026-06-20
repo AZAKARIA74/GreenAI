@@ -1,7 +1,9 @@
 package com.example.greenai.ui.screen
 
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +16,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -24,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.greenai.R
 import com.example.greenai.domain.model.RecommendResponse
 import com.example.greenai.ui.component.Button
+import com.example.greenai.ui.component.GreenAIFilterChip
 import com.example.greenai.ui.component.MyTopAppBar
 import com.example.greenai.ui.component.SuggestionResultsSection
 import com.example.greenai.ui.component.TextFiled
@@ -32,19 +38,52 @@ import com.greenai.ui.theme.GreenAITheme
 import kotlin.collections.lastIndex
 
 
+enum class SuggestionMode {
+    FERTILIZER,
+    CROP
+}
+
 @Composable
 fun SuggestionScreen() {
-    val fields = listOf(
-        FieldData("Nitrogen",    "0 - 200",      FieldRule.Numeric(0f, 200f)),
-        FieldData("Phosphorus",  "0 - 150",      FieldRule.Numeric(0f, 150f)),
-        FieldData("Potassium",   "0 - 300",      FieldRule.Numeric(0f, 300f)),
-        FieldData("pH",          "0 - 14",       FieldRule.Numeric(0f, 14f)),
-        FieldData("Rainfall",    "e.g. 120 mm",  FieldRule.Numeric(0f, 5000f)),
+
+    var selectedMode by remember {
+        mutableStateOf(SuggestionMode.FERTILIZER)
+    }
+
+    val suggestionFields = listOf(
+        FieldData("Nitrogen", "0 - 200", FieldRule.Numeric(0f, 200f)),
+        FieldData("Phosphorus", "0 - 150", FieldRule.Numeric(0f, 150f)),
+        FieldData("Potassium", "0 - 300", FieldRule.Numeric(0f, 300f)),
+        FieldData("pH", "0 - 14", FieldRule.Numeric(0f, 14f)),
+        FieldData("Rainfall", "e.g. 120 mm", FieldRule.Numeric(0f, 5000f)),
         FieldData("Temperature", "-20 to 60 °C", FieldRule.Numeric(-20f, 60f)),
-        FieldData("Soil Color",  "e.g. Red",     FieldRule.TextOnly),
+        FieldData("Soil Color", "e.g. Red", FieldRule.TextOnly)
     )
-    val values  = remember { mutableStateListOf(*Array(fields.size) { "" }) }
-    val errors  = remember { mutableStateListOf(*Array(fields.size) { null as String? }) }
+
+    val compatibilityFields = listOf(
+        FieldData("Crop", "e.g. Wheat", FieldRule.TextOnly),
+        FieldData("Nitrogen", "0 - 200", FieldRule.Numeric(0f, 200f)),
+        FieldData("Phosphorus", "0 - 150", FieldRule.Numeric(0f, 150f)),
+        FieldData("Potassium", "0 - 300", FieldRule.Numeric(0f, 300f)),
+        FieldData("Temperature", "-20 to 60 °C", FieldRule.Numeric(-20f, 60f)),
+        FieldData("Humidity", "0 - 100", FieldRule.Numeric(0f, 100f)),
+        FieldData("pH", "0 - 14", FieldRule.Numeric(0f, 14f)),
+        FieldData("Soil Color", "e.g. Red", FieldRule.TextOnly)
+    )
+
+    val currentFields =
+        if (selectedMode == SuggestionMode.CROP)
+            suggestionFields
+        else
+            compatibilityFields
+
+    val values = remember(selectedMode) {
+        List(currentFields.size) { "" }.toMutableStateList()
+    }
+
+    val errors = remember(selectedMode) {
+        List<String?>(currentFields.size) { null }.toMutableStateList()
+    }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -55,6 +94,7 @@ fun SuggestionScreen() {
             )
         }
     ) { innerPadding ->
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
@@ -64,60 +104,115 @@ fun SuggestionScreen() {
         ) {
 
             item(span = { GridItemSpan(2) }) {
+
                 Column {
-                    Text("Soil & climate inputs", style = MaterialTheme.typography.titleLarge)
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+
+                        GreenAIFilterChip(
+                            selected = selectedMode == SuggestionMode.FERTILIZER,
+                            onClick = {
+                                selectedMode = SuggestionMode.FERTILIZER
+                            },
+                            label = {
+                                Text("Recommend Fertilizer")
+                            }
+                        )
+
+                        GreenAIFilterChip(
+                            selected = selectedMode == SuggestionMode.CROP,
+                            onClick = {
+                                selectedMode = SuggestionMode.CROP
+                            },
+                            label = {
+                                Text("Recommend Crop")
+                            }
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
                     Text(
-                        "Enter 7 Parameters",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                        text =
+                            if (selectedMode == SuggestionMode.FERTILIZER)
+                                "Fertilizer Recommendation"
+                            else
+                                "Crop Recommendation",
+                        style = MaterialTheme.typography.titleLarge
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text =
+                            if (selectedMode == SuggestionMode.FERTILIZER)
+                                "Enter soil and crop data"
+                            else
+                                "Enter soil and climate data",
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = .5f)
+                    )
+
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
 
-
             items(
-                count = fields.size,
+                count = currentFields.size,
+                key = { index -> "${selectedMode.name}_${currentFields[index].title}" },
                 span = { index ->
-                    if (index == fields.lastIndex) {
+                    if (currentFields.size %2 != 0 && index == currentFields.lastIndex) {
                         GridItemSpan(2)
                     } else {
                         GridItemSpan(1)
                     }
                 }
             ) { index ->
+
                 TextFiled(
                     text = values[index],
                     onTextChange = {
                         values[index] = it
-                        errors[index] = validateField(it,fields[index])
+                        errors[index] =
+                            validateField(it, currentFields[index])
                     },
-                    title = fields[index].title,
-                    hint = fields[index].hint,
-                    isError      = errors[index] != null,
-                    errorMessage = errors[index],
+                    title = currentFields[index].title,
+                    hint = currentFields[index].hint,
+                    isError = errors[index] != null,
+                    errorMessage = errors[index]
                 )
             }
 
-
             item(span = { GridItemSpan(2) }) {
 
-
-                val hasErrors  = errors.any  { it != null }
-                val hasEmptyValues = values.any { it.isEmpty() }
+                val hasErrors = errors.any { it != null }
+                val hasEmptyValues = values.any { it.isBlank() }
 
                 Button(
                     modifier = Modifier
                         .padding(vertical = 16.dp)
                         .fillMaxWidth(),
-                    onClick  = {  },
-                    enabled  = !hasErrors && !hasEmptyValues ,
-                    caption  = "Suggest"
+                    onClick = {},
+                    enabled = !hasErrors && !hasEmptyValues,
+                    caption = "Recommend"
                 )
             }
 
             item(span = { GridItemSpan(2) }) {
-                SuggestionResultsSection(RecommendResponse("Wheat", "Urea"))
+
+                SuggestionResultsSection(
+                    if (selectedMode == SuggestionMode.CROP)
+                        RecommendResponse(
+                            crop = "Wheat",
+                            fertilizer = "Urea"
+                        )
+                    else
+                        RecommendResponse(
+                            crop = "",
+                            fertilizer = "Urea"
+                        )
+                )
             }
         }
     }
