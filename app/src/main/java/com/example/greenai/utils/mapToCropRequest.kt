@@ -2,7 +2,7 @@ package com.example.greenai.utils
 
 
 import com.example.greenai.domain.model.RecommendRequest
-import com.example.greenai.ui.screen.FieldData
+
 import kotlin.collections.indexOfFirst
 
 fun mapToCropRequest(

@@ -1,7 +1,5 @@
 package com.example.greenai.utils
 
-import com.example.greenai.ui.screen.FieldData
-import com.example.greenai.ui.screen.FieldRule
 
 fun validateField(value: String, field: FieldData): String? {
     if (value.isBlank()) return "${field.title} is required"

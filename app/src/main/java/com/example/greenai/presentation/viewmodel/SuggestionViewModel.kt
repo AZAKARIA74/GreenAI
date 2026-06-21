@@ -6,10 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.greenai.domain.repository.Repository
-import com.example.greenai.ui.screen.FieldData
 import com.example.greenai.utils.SuggestionMode
 import com.example.greenai.ui.state.Resource
 import com.example.greenai.ui.state.SuggestionResult
+import com.example.greenai.utils.FieldData
 import com.example.greenai.utils.mapToCropRequest
 import com.example.greenai.utils.mapToFertilizerRequest
 import kotlinx.coroutines.flow.MutableStateFlow

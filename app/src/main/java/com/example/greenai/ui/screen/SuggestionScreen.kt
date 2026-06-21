@@ -38,6 +38,9 @@ import com.example.greenai.ui.component.SuggestionResultsSection
 import com.example.greenai.ui.component.TextFiled
 import com.example.greenai.ui.state.Resource
 import com.example.greenai.ui.state.SuggestionResult
+import com.example.greenai.utils.FieldData
+import com.example.greenai.utils.SuggestionFields.cropRecommendFields
+import com.example.greenai.utils.SuggestionFields.fertilizerRecommendFields
 import com.example.greenai.utils.SuggestionMode
 import com.example.greenai.utils.validateField
 import com.greenai.ui.theme.GreenAITheme
@@ -64,32 +67,10 @@ fun SuggestionScreenContent(
     state: Resource<SuggestionResult>,
     selectedMode: SuggestionMode = SuggestionMode.FERTILIZER,
     setMode:  (SuggestionMode) -> Unit,
-    onRecommend: (List<String>,List<FieldData>) -> Unit = {_,_->},
+    onRecommend: (List<String>,List<FieldData>) -> Unit = { _, _->},
     onBackClick: () -> Unit = {},
 ) {
     var isLoading by remember { mutableStateOf(false) }
-
-
-    val cropRecommendFields = listOf(
-        FieldData("Nitrogen", "0 - 200", FieldRule.Numeric(0f, 200f)),
-        FieldData("Phosphorus", "0 - 150", FieldRule.Numeric(0f, 150f)),
-        FieldData("Potassium", "0 - 300", FieldRule.Numeric(0f, 300f)),
-        FieldData("pH", "0 - 14", FieldRule.Numeric(0f, 14f)),
-        FieldData("Rainfall", "e.g. 120 mm", FieldRule.Numeric(0f, 5000f)),
-        FieldData("Temperature", "-20 to 60 °C", FieldRule.Numeric(-20f, 60f)),
-        FieldData("Soil Color", "e.g. Red", FieldRule.TextOnly)
-    )
-
-    val fertilizerRecommendFields = listOf(
-        FieldData("Crop", "e.g. Wheat", FieldRule.TextOnly),
-        FieldData("Nitrogen", "0 - 200", FieldRule.Numeric(0f, 200f)),
-        FieldData("Phosphorus", "0 - 150", FieldRule.Numeric(0f, 150f)),
-        FieldData("Potassium", "0 - 300", FieldRule.Numeric(0f, 300f)),
-        FieldData("Temperature", "-20 to 60 °C", FieldRule.Numeric(-20f, 60f)),
-        FieldData("Humidity", "0 - 100", FieldRule.Numeric(0f, 100f)),
-        FieldData("pH", "0 - 14", FieldRule.Numeric(0f, 14f)),
-        FieldData("Soil Color", "e.g. Red", FieldRule.TextOnly)
-    )
 
     val currentFields =
         if (selectedMode == SuggestionMode.CROP)
@@ -263,16 +244,6 @@ fun SuggestionScreenPreview() {
 }
 
 
-sealed class FieldRule {
-    data class Numeric(val min: Float, val max: Float) : FieldRule()
-    object TextOnly : FieldRule()
-}
-
-data class FieldData(
-    val title: String,
-    val hint: String,
-    val rule: FieldRule
-)
 
 
 

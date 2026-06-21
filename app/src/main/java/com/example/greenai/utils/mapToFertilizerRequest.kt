@@ -1,7 +1,6 @@
 package com.example.greenai.utils
 
 import com.example.greenai.domain.model.FertilizerRequest
-import com.example.greenai.ui.screen.FieldData
 import kotlin.collections.indexOfFirst
 
 fun mapToFertilizerRequest(
