@@ -23,8 +23,8 @@ object RetrofitInstance {
 
     val api: Api by lazy {
         Retrofit.Builder()
-            .baseUrl(RetrofitInstance.BASE_URL)
-            .client(RetrofitInstance.okHttpClient)
+            .baseUrl(BASE_URL)
+            .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(Api::class.java)

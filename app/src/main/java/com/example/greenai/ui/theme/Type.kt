@@ -100,7 +100,7 @@ val GreenAITypography = Typography(
     bodyLarge = TextStyle(
         fontFamily = Poppins,
         fontWeight = FontWeight.Normal,
-        fontSize   = 16.sp,
+        fontSize   = 20.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp,
     ),

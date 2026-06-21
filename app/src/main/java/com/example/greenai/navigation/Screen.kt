@@ -1,9 +1,5 @@
 package com.example.greenai.navigation
 
-
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.ui.graphics.vector.ImageVector
 import com.example.greenai.R
 
 sealed class Screen(val route: String) {

@@ -4,15 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.greenai.data.remote.RetrofitInstance
 import com.example.greenai.data.repositories.RepositoryImpl
 import com.example.greenai.navigation.GreenAIApp
 import com.example.greenai.presentation.viewmodel.DiseaseViewModel
 import com.example.greenai.presentation.viewmodel.SuggestionViewModel
-import com.example.greenai.ui.screen.DiseaseScanScreen
-import com.example.greenai.ui.screen.SuggestionScreen
+
 
 import com.greenai.ui.theme.GreenAITheme
 

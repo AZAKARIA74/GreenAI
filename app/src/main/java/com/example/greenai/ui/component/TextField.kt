@@ -4,14 +4,19 @@ package com.example.greenai.ui.component
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
@@ -47,6 +53,8 @@ fun TextFiled(
     overflow: TextOverflow = TextOverflow.Ellipsis,
     isError: Boolean = false,
     errorMessage: String? = null,
+    shape: Shape = MaterialTheme.shapes.small,
+    backgroundColor: Color = MaterialTheme.colorScheme.background
 ){
     var isFocussed: Boolean by remember { mutableStateOf(false) }
     val borderColor: Color = when {
@@ -74,12 +82,15 @@ fun TextFiled(
         Row (
             modifier = Modifier
                 .fillMaxWidth(1f)
-                .height(45.dp)
-                .clip(MaterialTheme.shapes.small)
-                .background(Color.Transparent)
+                .heightIn(
+                    min = 45.dp,
+                    max = 150.dp
+                )
+                .clip(shape)
+                .background(backgroundColor)
                 .border(
                     width = borderSize,
-                    shape = MaterialTheme.shapes.small,
+                    shape = shape,
                     color = borderColor
                 )
                 .padding(horizontal = GreenAISpacing.md)
@@ -89,12 +100,14 @@ fun TextFiled(
                 ,
 
 
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ){
 
-            Box(modifier = Modifier.weight(1f)
+            Box(
+                modifier = Modifier.weight(1f),
+                contentAlignment = Alignment.CenterStart
             ){
-                if(text.isBlank())
+                if(text.isEmpty())
                 {
                     hint?.let {
                         BasicText(
@@ -109,13 +122,17 @@ fun TextFiled(
 
                 BasicTextField(
                     value = text,
-                    modifier = modifier.fillMaxWidth(),
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .verticalScroll(rememberScrollState())
+                        .padding(vertical = 4.dp),
                     onValueChange = onTextChange,
                     cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
                     textStyle = titleStyle.copy(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
-                    maxLines = maxLine
+                    maxLines = maxLine,
+
                 )
 
             }

@@ -36,7 +36,7 @@ fun MyTopAppBar(
                 Text(
                     text = title,
                     color = MaterialTheme.colorScheme.onBackground,
-                    style = MaterialTheme.typography.headlineMedium
+                    style = MaterialTheme.typography.titleLarge
                 )
             },
 

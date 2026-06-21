@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,21 +35,23 @@ fun Button(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     leadingIcon: Painter? = null,
+    icon: Painter? = null,
     trailingIcon: Painter? = null,
     loading: (@Composable () -> Unit)? = null,
     isLoading: Boolean = false,
-    caption: String,
+    caption: String? = null,
     hasBorder: Boolean = false,
     borderSize: Int = 1,
     borderColor: Color = MaterialTheme.colorScheme.outline,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     onContainerColor: Color = Color.White,
     enabled: Boolean = true,
+    shape: Shape = GreenAIShape.buttonRounded
 ) {
     Row(
         modifier = modifier
             .height(GreenAISpacing.buttonHeight)
-            .clip(GreenAIShape.buttonRounded)
+            .clip(shape)
 
             .background(if (enabled) containerColor else Color.Gray )
             .then(
@@ -88,15 +91,28 @@ fun Button(
             )
         }
         }
+        icon?.let {
 
-        // 🔹 Text
-        Text(
-            text = caption,
-            color = if (enabled) onContainerColor else Color.DarkGray,
+            Image(
+                painter = it,
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(onContainerColor),
+                modifier = Modifier
+                    .size(24.dp)
+            )
+        }
 
-        )
 
-        // 🔹 Icon
+
+        caption?.let {
+            Text(
+                text = it,
+                color = if (enabled) onContainerColor else Color.DarkGray,
+
+                )
+        }
+
+
         trailingIcon?.let {
             Spacer(Modifier.width(GreenAISpacing.sm))
             Image(
