@@ -19,7 +19,7 @@ fun mapToFertilizerRequest(
         phosphorus = getValue("Phosphorus").toFloatOrNull() ?: 0f,
         potassium = getValue("Potassium").toFloatOrNull() ?: 0f,
         temperature = getValue("Temperature").toFloatOrNull() ?: 0f,
-        humidity = getValue("Humidity").toFloatOrNull() ?: 0f,
+        rainfall = getValue("Rainfall").toFloatOrNull() ?: 0f,
         pH = getValue("pH").toFloatOrNull() ?: 0f,
         soilType = getValue("Soil Color")
     )

@@ -28,7 +28,6 @@ import com.example.greenai.R
 import com.example.greenai.ui.theme.GreenAIShape
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.greenai.presentation.viewmodel.DiseaseViewModel
 import com.example.greenai.ui.theme.GreenAISpacing
 import com.greenai.ui.theme.GreenAITheme
 

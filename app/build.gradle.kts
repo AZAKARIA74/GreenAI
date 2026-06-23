@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -69,6 +70,9 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
 
 
 }

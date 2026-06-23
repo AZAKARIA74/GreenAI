@@ -1,17 +1,12 @@
 package com.example.greenai.presentation.viewmodel
 
-import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.greenai.domain.model.MessageModel
 import com.google.ai.client.generativeai.GenerativeModel
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+
 
 class ChatViewModel(
 

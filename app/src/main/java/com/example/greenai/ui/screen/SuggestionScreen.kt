@@ -220,6 +220,7 @@ fun SuggestionScreenContent(
                         isLoading = true
                     }
                     is Resource.Success -> {
+                        isLoading = false
                         state.data?.let {result ->
                             SuggestionResultsSection(result)
                         }

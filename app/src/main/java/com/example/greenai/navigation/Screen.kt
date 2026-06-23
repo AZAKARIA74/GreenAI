@@ -3,6 +3,8 @@ package com.example.greenai.navigation
 import com.example.greenai.R
 
 sealed class Screen(val route: String) {
+    object Login : Screen("login")
+    object Register : Screen("register")
     object Home : Screen("home")
     object DiseaseScan : Screen("disease_scan")
     object Suggestion : Screen("suggestion")

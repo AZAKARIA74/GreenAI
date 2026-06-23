@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import com.example.greenai.R
 import com.example.greenai.ui.state.DiseaseResultState
 import com.greenai.ui.theme.GreenAITheme
-import kotlin.text.ifEmpty
 
 
 @Composable
@@ -54,7 +53,7 @@ fun ResultSection(
         Spacer(modifier = Modifier.height(4.dp))
 
         Text(
-            text = result.disease.ifEmpty { "—" },
+            text = result.disease,
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onSurface
         )

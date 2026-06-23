@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "354760004460",
+    "project_id": "greenai-109be",
+    "storage_bucket": "greenai-109be.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:354760004460:android:2378181245801e4268d949",
+        "android_client_info": {
+          "package_name": "com.example.greenai"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBYNR_Oy1tKNSpaDZWKPgevLSEza_g5qIo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

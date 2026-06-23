@@ -41,6 +41,7 @@ import com.example.greenai.ui.state.Resource
 import com.example.greenai.ui.state.DiseaseResultState
 import com.example.greenai.ui.theme.GreenAIShape
 import com.example.greenai.ui.theme.GreenAISpacing
+import com.example.greenai.utils.formatDiseaseName
 import com.example.greenai.utils.uriToMultipart
 import com.greenai.ui.theme.GreenAITheme
 
@@ -108,10 +109,13 @@ fun DiseaseScanContent(
                 }
                 is Resource.Success -> {
                     isLoading = false
+                    val diseaseName = formatDiseaseName(
+                        state.data?.prediction ?: "Unknown"
+                    )
                     ResultSection(
                         result = DiseaseResultState(
-                            state.data?.prediction ?:"" ,
-                            state.data?.confidence ?: 0f
+                            disease = diseaseName,
+                            confidence = state.data?.confidence ?: 0f
                         )
                     )
 
@@ -134,7 +138,7 @@ fun DiseaseScanContent(
                     .fillMaxWidth()
                     .padding(GreenAISpacing.md)
                     .clip(GreenAIShape.circle),
-                caption = "Analyze",
+                caption = "Scan",
                 isLoading = isLoading,
                 enabled = imageUri != null && !isLoading
             )

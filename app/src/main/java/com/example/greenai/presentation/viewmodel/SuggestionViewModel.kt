@@ -1,5 +1,6 @@
 package com.example.greenai.presentation.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -12,9 +13,11 @@ import com.example.greenai.ui.state.SuggestionResult
 import com.example.greenai.utils.FieldData
 import com.example.greenai.utils.mapToCropRequest
 import com.example.greenai.utils.mapToFertilizerRequest
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class SuggestionViewModel(
     val repo: Repository
@@ -41,6 +44,7 @@ class SuggestionViewModel(
 
                     SuggestionMode.FERTILIZER -> {
                         val request = mapToFertilizerRequest(values, fields)
+                        Log.d("API_REQUEST", Gson().toJson(request))
                         val result = repo.recommendFertilizer(request)
                         _uiState.value = Resource.Success(
                             data = SuggestionResult.Fertilizer(result.recommendedFertilizer)
@@ -49,6 +53,7 @@ class SuggestionViewModel(
 
                     SuggestionMode.CROP -> {
                         val request = mapToCropRequest(values, fields)
+                        Log.d("API_REQUEST", Gson().toJson(request))
                         val result = repo.recommendAll(request)
                         _uiState.value = Resource.Success(
                             data = SuggestionResult.Crop(result.crop,result.fertilizer)
@@ -56,11 +61,44 @@ class SuggestionViewModel(
                     }
                 }
 
-            } catch (e: Exception) {
+            }  catch (e: HttpException) {
+
+                Log.e(
+                    "HTTP_CODE",
+                    e.code().toString()
+                )
+
+                Log.e(
+                    "HTTP_MESSAGE",
+                    e.message()
+                        ?: "No Message"
+                )
+
+                Log.e(
+                    "HTTP_BODY",
+                    e.response()
+                        ?.errorBody()
+                        ?.string()
+                        ?: "No Error Body"
+                )
+
                 _uiState.value = Resource.Error(
-                    message = e.message ?: "Unknown error"
+                    e.message() ?: "Server Error"
+                )
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "API_ERROR",
+                    e.message ?: "Unknown Error",
+                    e
+                )
+
+                _uiState.value = Resource.Error(
+                    e.message ?: "Unknown Error"
                 )
             }
+
         }
     }
 }
