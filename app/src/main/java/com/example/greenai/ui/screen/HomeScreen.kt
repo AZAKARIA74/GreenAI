@@ -94,11 +94,11 @@ private fun HomeHeader(
             )
         }
         Button(
-            caption = "Sign Out",
             containerColor = MaterialTheme.colorScheme.background,
             onContainerColor = MaterialTheme.colorScheme.onBackground,
             hasBorder = true,
-            onClick = onSignOutClick
+            onClick = onSignOutClick,
+            icon = painterResource(R.drawable.logout)
         )
 
     }
