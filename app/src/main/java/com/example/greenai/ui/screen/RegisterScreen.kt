@@ -35,12 +35,12 @@ fun RegisterScreen(
     onRegisterSuccess: () -> Unit = {},
     onNavigateToLogin: () -> Unit = {}
 ) {
-    val state by viewModel.authState.collectAsState()
+    val state by viewModel.registerState.collectAsState()
 
     LaunchedEffect(state) {
         if (state is Resource.Success) {
             onRegisterSuccess()
-            viewModel.resetState()
+            viewModel.resetRegisterState()
         }
     }
 

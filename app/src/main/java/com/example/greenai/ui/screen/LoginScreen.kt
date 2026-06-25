@@ -35,12 +35,12 @@ fun LoginScreen(
     onLoginSuccess: () -> Unit = {},
     onNavigateToRegister: () -> Unit = {}
 ) {
-    val state by viewModel.authState.collectAsState()
+    val state by viewModel.loginState.collectAsState()
 
     LaunchedEffect(state) {
         if (state is Resource.Success) {
             onLoginSuccess()
-            viewModel.resetState()
+            viewModel.resetLoginState()
         }
     }
 
@@ -69,6 +69,7 @@ fun LoginContent(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Text(
             text = "SIGN IN",
             style = MaterialTheme.typography.titleLarge,

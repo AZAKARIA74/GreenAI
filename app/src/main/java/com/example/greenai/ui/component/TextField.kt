@@ -4,6 +4,7 @@ package com.example.greenai.ui.component
 import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,7 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,7 +34,9 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,6 +45,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.greenai.ui.theme.GreenAISpacing
 import com.greenai.ui.theme.GreenAITheme
+
 
 @Composable
 fun TextFiled(
@@ -54,9 +64,12 @@ fun TextFiled(
     errorMessage: String? = null,
     shape: Shape = MaterialTheme.shapes.small,
     backgroundColor: Color = MaterialTheme.colorScheme.background,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
 ){
     var isFocussed: Boolean by remember { mutableStateOf(false) }
+    var showPassword by remember {
+        mutableStateOf(false)
+    }
     val borderColor: Color = when {
         isError   -> MaterialTheme.colorScheme.error
         else      -> focusBorderColor
@@ -132,9 +145,47 @@ fun TextFiled(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     ),
                     maxLines = maxLine,
-                    visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
+                    visualTransformation =
+                        if (isPassword && !showPassword)
+                            PasswordVisualTransformation()
+                        else
+                            VisualTransformation.None,
+                    keyboardOptions = if (isPassword) {
+                        KeyboardOptions(
+                            keyboardType = KeyboardType.Password,
+                            autoCorrectEnabled = false
+                        )
+                    } else {
+                        KeyboardOptions.Default
+                    }
                 )
 
+            }
+            if (isPassword) {
+                IconButton(
+                    onClick = {
+                        showPassword = !showPassword
+                    }
+                ) {
+                    Icon(
+                        imageVector =
+                            if (showPassword)
+                                Icons.Default.Visibility
+                            else
+                                Icons.Default.VisibilityOff,
+                        contentDescription = null,
+                        tint = hintColor.copy(alpha = 0.7f),
+                        modifier = Modifier.pointerInput(Unit) {
+                            detectTapGestures(
+                                onPress = {
+                                    showPassword = true
+                                    tryAwaitRelease()
+                                    showPassword = false
+                                }
+                            )
+                        }
+                    )
+                }
             }
 
         }
@@ -185,6 +236,13 @@ fun TextFieldPreview2() {
                 onTextChange = { text = it },
                 title = "Nitrogen",
                 hint = "0 – 100 %"
+            )
+            TextFiled(
+                text = text,
+                onTextChange = { text = it },
+                title = "Password",
+                hint = "*******",
+                isPassword = true
             )
 
 

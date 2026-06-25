@@ -13,9 +13,13 @@ class AuthViewModel(
     private val repo: AuthRepository
 ) : ViewModel() {
 
-    private val _authState = MutableStateFlow<Resource<FirebaseUser>>(Resource.Idle())
-    val authState = _authState.asStateFlow()
+    private val _loginState =
+        MutableStateFlow<Resource<FirebaseUser>>(Resource.Idle())
+    val loginState = _loginState.asStateFlow()
 
+    private val _registerState =
+        MutableStateFlow<Resource<FirebaseUser>>(Resource.Idle())
+    val registerState = _registerState.asStateFlow()
     val isLoggedIn: Boolean
         get() = repo.currentUser != null
 
@@ -27,36 +31,53 @@ class AuthViewModel(
 
     fun login(email: String, password: String) {
         viewModelScope.launch {
-            _authState.value = Resource.Loading()
+            _loginState.value = Resource.Loading()
             try {
-                _authState.value = Resource.Success(repo.signIn(email, password))
+                _loginState.value = Resource.Success(
+                    repo.signIn(email, password)
+                )
             } catch (e: Exception) {
-                _authState.value = Resource.Error(message = e.message ?: "Login failed")
+                _loginState.value =
+                    Resource.Error(e.message ?: "Login failed")
             }
         }
     }
 
-    fun register(username: String,email: String, password: String, confirmPassword: String) {
+    fun register(
+        username: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ) {
         if (password != confirmPassword) {
-            _authState.value = Resource.Error(message = "Passwords do not match")
+            _registerState.value =
+                Resource.Error("Passwords do not match")
             return
         }
+
         viewModelScope.launch {
-            _authState.value = Resource.Loading()
+            _registerState.value = Resource.Loading()
             try {
-                _authState.value = Resource.Success(repo.signUp(username,email, password))
+                _registerState.value = Resource.Success(
+                    repo.signUp(username, email, password)
+                )
             } catch (e: Exception) {
-                _authState.value = Resource.Error(message = e.message ?: "Registration failed")
+                _registerState.value =
+                    Resource.Error(e.message ?: "Registration failed")
             }
         }
     }
 
-    fun resetState() {
-        _authState.value = Resource.Idle()
+    fun resetLoginState() {
+        _loginState.value = Resource.Idle()
     }
 
+    fun resetRegisterState() {
+        _registerState.value = Resource.Idle()
+    }
     fun signOut() {
         repo.signOut()
-        _authState.value = Resource.Idle()
+        resetLoginState()
+        resetRegisterState()
     }
 }

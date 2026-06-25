@@ -70,6 +70,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+    implementation("androidx.compose.material:material-icons-extended")
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
