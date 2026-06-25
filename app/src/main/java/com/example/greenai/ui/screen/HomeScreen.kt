@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import com.example.greenai.ui.component.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,14 +43,18 @@ enum class HomeTab {
 @Composable
 fun HomeScreen(
     userName: String = "Farmer",
-    onQuickActionClick: (HomeTab) -> Unit = {}
+    onQuickActionClick: (HomeTab) -> Unit = {},
+    onSignOutClick: () -> Unit = {}
+
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        HomeHeader(userName = userName)
+        HomeHeader(userName = userName,
+            onSignOutClick = onSignOutClick
+        )
 
         LazyColumn(
             modifier = Modifier
@@ -65,7 +70,10 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeHeader(userName: String) {
+private fun HomeHeader(
+    userName: String,
+    onSignOutClick: () -> Unit = {}
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -85,6 +93,13 @@ private fun HomeHeader(userName: String) {
                 color = MaterialTheme.colorScheme.onBackground
             )
         }
+        Button(
+            caption = "Sign Out",
+            containerColor = MaterialTheme.colorScheme.background,
+            onContainerColor = MaterialTheme.colorScheme.onBackground,
+            hasBorder = true,
+            onClick = onSignOutClick
+        )
 
     }
 }

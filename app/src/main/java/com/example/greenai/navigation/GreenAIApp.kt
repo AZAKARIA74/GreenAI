@@ -94,7 +94,14 @@ fun GreenAIApp(
             composable(Screen.Home.route) {
                 HomeScreen(
                     userName = authViewModel.currentUserName?: "Farmer",
-                    onQuickActionClick = { tab -> navController.navigateToTab(tab) }
+                    onQuickActionClick = { tab -> navController.navigateToTab(tab) },
+                    onSignOutClick = {
+                        authViewModel.signOut()
+
+                        navController.navigate(Screen.Login.route) {
+                            popUpTo(0) { inclusive = true }
+                            launchSingleTop = true
+                        }}
                 )
             }
             composable(Screen.DiseaseScan.route) {
