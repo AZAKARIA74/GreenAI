@@ -19,7 +19,7 @@ class ChatViewModel(
     }
     private val model = GenerativeModel(
         modelName = "gemini-3.5-flash",
-        apiKey = "AQ.Ab8RN6KPeuUlCbSX3AalC4p4G8qnO4CK1R2mRE8rDdnG7sKAjw",
+        apiKey = "***",
         systemInstruction = Content(
             parts = listOf(
                 TextPart(
