@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.greenai.domain.model.MessageModel
 import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.Content
+import com.google.ai.client.generativeai.type.TextPart
 import kotlinx.coroutines.launch
 
 
@@ -17,7 +19,19 @@ class ChatViewModel(
     }
     private val model = GenerativeModel(
         modelName = "gemini-3.5-flash",
-        apiKey = "AQ.Ab8RN6KPeuUlCbSX3AalC4p4G8qnO4CK1R2mRE8rDdnG7sKAjw"
+        apiKey = "AQ.Ab8RN6KPeuUlCbSX3AalC4p4G8qnO4CK1R2mRE8rDdnG7sKAjw",
+        systemInstruction = Content(
+            parts = listOf(
+                TextPart(
+                    """
+                You are "GreenAI", an intelligent assistant specialized in agriculture, crop disease detection, and agricultural decision support.
+                - Always speak as GreenAI, never as Gemini or Google.
+                - If asked "who are you?" or "who made you?", respond that you are GreenAI, a smart agricultural assistant.
+                - Keep responses concise, clear, and focused on the agricultural context whenever possible.
+                """.trimIndent()
+                )
+            )
+        )
     )
 
     private val chat = model.startChat()

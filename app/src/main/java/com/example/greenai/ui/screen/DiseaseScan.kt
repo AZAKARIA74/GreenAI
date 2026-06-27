@@ -1,7 +1,11 @@
 package com.example.greenai.ui.screen
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +32,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.greenai.R
 import com.example.greenai.domain.model.DiseaseResponse
@@ -44,6 +50,7 @@ import com.example.greenai.ui.theme.GreenAISpacing
 import com.example.greenai.utils.formatDiseaseName
 import com.example.greenai.utils.uriToMultipart
 import com.greenai.ui.theme.GreenAITheme
+import java.io.File
 
 @Composable
 fun DiseaseScanScreen(
@@ -151,6 +158,32 @@ fun UploadContainer(
     imageUri: Uri?,
     onImageSelected: (Uri?) -> Unit
 ){
+    val context = LocalContext.current
+
+    val tempPhotoUri = remember {
+        val file = File(context.cacheDir, "temp_photo_${System.currentTimeMillis()}.jpg")
+        FileProvider.getUriForFile(
+            context,
+            "${context.packageName}.provider",
+            file
+        )
+    }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicture()
+    ) { success ->
+        if (success) {
+            onImageSelected(tempPhotoUri)
+        }
+    }
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            cameraLauncher.launch(tempPhotoUri)
+        }
+    }
+
     Column(
         modifier = Modifier
             .height(360.dp)
@@ -169,6 +202,16 @@ fun UploadContainer(
 
         Button(
             onClick = {
+                when {
+                    ContextCompat.checkSelfPermission(
+                        context, Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        cameraLauncher.launch(tempPhotoUri)
+                    }
+                    else -> {
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                }
 
             },
             containerColor = MaterialTheme.colorScheme.primary,
