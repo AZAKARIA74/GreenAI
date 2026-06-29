@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.greenai" />
-                  <option name="mobileSdkAppId" value="1:354760004460:android:2378181245801e4268d949" />
-                  <option name="projectId" value="greenai-109be" />
-                  <option name="projectNumber" value="354760004460" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
